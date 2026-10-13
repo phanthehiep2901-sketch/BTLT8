@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TECH GEAR - Shop Phụ Kiện Điện Thoại Mini</title>
+    <!-- Nhúng Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Nhúng FontAwesome Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Nhúng CSS tùy chỉnh -->
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- Nhúng Vue.js 3 CDN (BẮT BUỘC TRƯỚC app.js) -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex flex-col">
+
+    <!-- APP WRAPPER CHO VUE.JS -->
+    <div id="app" class="flex flex-col min-h-screen">
+
+        <!-- HEADER / NAVIGATION TĨNH & TỔNG SỐ LƯỢNG GIỎ HÀNG ĐỘNG -->
+        <header class="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-100">
+            <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center space-x-2">
+                    <div class="bg-blue-600 text-white p-2 rounded-lg text-xl font-bold">
+                        <i class="fa-solid fa-charging-station"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl font-black text-gray-900 tracking-wider block leading-none">TECH GEAR</span>
+                        <span class="text-[10px] text-gray-500 font-semibold tracking-widest uppercase">Accessories</span>
+                    </div>
+                </div>
+
+                <!-- Menu Ngang Tĩnh -->
+                <nav class="hidden md:flex space-x-8 text-xs font-bold uppercase tracking-wider text-gray-600">
+                    <a href="#" class="text-blue-600 hover:text-blue-700 transition">Home</a>
+                    <a href="#" class="hover:text-blue-600 transition">Shop</a>
+                    <a href="#" class="hover:text-blue-600 transition">Accessories</a>
+                    <a href="#" class="hover:text-blue-600 transition">Cases</a>
+                    <a href="#" class="hover:text-blue-600 transition">Earphones</a>
+                    <a href="#" class="hover:text-blue-600 transition">Sale</a>
+                </nav>
+
+                <!-- Ô Tìm Kiếm + Icon Giỏ Hàng -->
+                <div class="flex items-center space-x-4">
+                    <!-- YÊU CẦU 8: Ô tìm kiếm liên kết 2 chiều với v-model tuKhoa -->
+                    <div class="relative hidden sm:block">
+                        <input type="text" 
+                               v-model="tuKhoa" 
+                               placeholder="Search..." 
+                               class="bg-gray-100 text-xs px-3 py-1.5 pl-8 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 w-36 md:w-48 transition">
+                        <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2 text-gray-400 text-xs"></i>
+                    </div>
+
+                    <!-- YÊU CẦU 3: Icon giỏ hàng với số lượng quản lý động qua Vue {{ tongSoLuongCart }} -->
+                    <div class="relative cursor-pointer bg-blue-600 text-white p-2 rounded-full w-9 h-9 flex items-center justify-center shadow-md">
+                        <i class="fa-solid fa-cart-shopping text-sm"></i>
+                        <span v-if="tongSoLuongCart > 0" 
+                              class="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow">
+                            {{ tongSoLuongCart }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN CONTAINER -->
+        <main class="max-w-7xl mx-auto px-6 py-8 flex-grow w-full space-y-8">
+
+            <!-- GRID CHÍNH: BÊN TRÁI LÀ DANH SÁCH SẢN PHẨM - BÊN PHẢI LÀ ASIDE GIỎ HÀNG -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                <!-- SECTION SẢN PHẨM (Chiếm 2 cột) -->
+                <section class="lg:col-span-2 space-y-6">
+                    
+                    <!-- Dành riêng cho màn hình di động khi tìm kiếm -->
+                    <div class="sm:hidden mb-4">
+                        <input type="text" 
+                               v-model="tuKhoa" 
+                               placeholder="Tìm kiếm sản phẩm..." 
+                               class="w-full bg-gray-100 text-sm px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <!-- Thông báo khi tìm kiếm không ra sản phẩm -->
+                    <div v-if="danhSachLoc.length === 0" class="bg-white p-8 rounded-2xl text-center shadow-sm text-gray-500">
+                        <i class="fa-solid fa-box-open text-4xl mb-3 text-gray-300"></i>
+                        <p>Không tìm thấy sản phẩm nào phù hợp với từ khóa "<strong>{{ tuKhoa }}</strong>".</p>
+                    </div>
+
+                    <!-- YÊU CẦU 5: Render danh sách bằng v-for từ danhSachLoc -->
+                    <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                        <!-- ARTICLE SẢN PHẨM -->
+                        <article v-for="sp in danhSachLoc" 
+                                 :key="sp.id" 
+                                 class="bg-white border border-gray-100 rounded-2xl p-3 shadow-sm hover:shadow-md transition flex flex-col justify-between group">
+                            
+                            <!-- Ảnh sản phẩm -->
+                            <div class="h-36 w-full bg-gray-50 rounded-xl overflow-hidden flex items-center justify-center p-2 mb-3">
+                                <img :src="sp.hinhAnh" :alt="sp.ten" class="max-h-full object-contain group-hover:scale-105 transition duration-300">
+                            </div>
+
+                            <!-- Thông tin sản phẩm -->
+                            <div>
+                                <h3 class="font-bold text-xs uppercase text-gray-800 tracking-tight line-clamp-1 mb-1">{{ sp.ten }}</h3>
+                                <p class="text-blue-600 font-extrabold text-xs mb-3">{{ sp.gia.toLocaleString('vi-VN') }} VND</p>
+                            </div>
+
+                            <!-- YÊU CẦU 6: Nút "Thêm vào giỏ" dùng @click gọi method themVaoGio(sp) -->
+                            <button @click="themVaoGio(sp)" 
+                                    class="w-full bg-blue-600 hover:bg-blue-700 text-white py-1.5 px-3 rounded-lg text-xs font-semibold flex items-center justify-center space-x-1 transition active:scale-95">
+                                <i class="fa-solid fa-cart-plus"></i>
+                                <span>Thêm vào giỏ</span>
+                            </button>
+                        </article>
+                    </div>
+                </section>
+
+                <!-- YÊU CẦU 7: ASIDE "GIỎ HÀNG CỦA BẠN" (Chiếm 1 cột) -->
+                <aside class="lg:col-span-1">
+                    <div class="bg-blue-50/50 border border-blue-100 rounded-2xl p-5 sticky top-24 shadow-sm space-y-4">
+                        
+                        <div>
+                            <h2 class="text-sm font-black uppercase text-gray-800 tracking-wider">YOUR CART</h2>
+                            <p class="text-xs text-gray-500">Giỏ hàng của bạn</p>
+                        </div>
+
+                        <!-- Trường hợp 1: Giỏ hàng trống (Dùng v-if) -->
+                        <div v-if="cart.length === 0" class="bg-white p-6 rounded-xl text-center text-gray-400 space-y-2 border border-dashed border-gray-200">
+                            <i class="fa-solid fa-basket-shopping text-3xl text-gray-300"></i>
+                            <p class="text-xs">Giỏ hàng đang trống.</p>
+                        </div>
+
+                        <!-- Trường hợp 2: Có sản phẩm trong giỏ (Dùng v-else & v-for) -->
+                        <div v-else class="space-y-3">
+                            <div class="max-h-80 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
+                                <div v-for="(item, index) in cart" 
+                                     :key="index" 
+                                     class="bg-white p-2.5 rounded-xl flex items-center justify-between border border-gray-100 shadow-sm">
+                                    
+                                    <div class="flex items-center space-x-2.5 overflow-hidden">
+                                        <img :src="item.hinhAnh" :alt="item.ten" class="w-10 h-10 object-contain bg-gray-50 p-1 rounded-lg flex-shrink-0">
+                                        <div class="min-w-0">
+                                            <h4 class="font-bold text-[11px] text-gray-800 uppercase tracking-tight truncate">{{ item.ten }}</h4>
+                                            <p class="text-[11px] text-blue-600 font-bold">{{ item.gia.toLocaleString('vi-VN') }} VND <span class="text-gray-400 font-normal">x{{ item.soLuong }}</span></p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Nút Xóa sản phẩm khỏi giỏ qua method xoaKhoiGio(index) -->
+                                    <button @click="xoaKhoiGio(index)" 
+                                            class="text-red-400 hover:text-red-600 p-1.5 text-xs transition" 
+                                            title="Xóa khỏi giỏ">
+                                        <i class="fa-solid fa-circle-xmark text-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Hiển thị Tổng Tiền tính từ Computed Property tongTien -->
+                            <div class="border-t border-blue-200 pt-3 flex justify-between items-center">
+                                <span class="text-xs font-bold uppercase text-gray-700">TOTAL</span>
+                                <span class="text-sm font-extrabold text-blue-600">{{ tongTien.toLocaleString('vi-VN') }} VND</span>
+                            </div>
+
+                            <!-- Nút Thanh Toán -->
+                            <button class="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider shadow-md hover:shadow-lg transition">
+                                CHECKOUT <span class="block text-[9px] font-normal lowercase opacity-80">Thanh toán</span>
+                            </button>
+                        </div>
+
+                    </div>
+                </aside>
+
+            </div>
+
+            <!-- YÊU CẦU 9: SECTION "KHUYẾN MÃI HÔM NAY" TĨNH -->
+            <section class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl py-4 px-6 text-center shadow-lg">
+                <p class="text-sm md:text-base font-extrabold uppercase tracking-wider">
+                    GET 20% OFF ALL CASES! LIMITED TIME OFFER
+                </p>
+            </section>
+
+        </main>
+
+        <!-- YÊU CẦU 10: FOOTER TĨNH -->
+        <footer class="bg-gray-900 text-gray-400 py-10 mt-12 border-t border-gray-800">
+            <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8 text-xs">
+                
+                <div class="space-y-2">
+                    <h3 class="font-bold text-white uppercase tracking-wider">ABOUT</h3>
+                    <ul class="space-y-1">
+                        <li><a href="#" class="hover:text-white transition">About Us</a></li>
+                        <li><a href="#" class="hover:text-white transition">Contact Us</a></li>
+                        <li><a href="#" class="hover:text-white transition">Earphones</a></li>
+                        <li><a href="#" class="hover:text-white transition">Control Policy</a></li>
+                    </ul>
+                </div>
+
+                <div class="space-y-2">
+                    <h3 class="font-bold text-white uppercase tracking-wider">SUPPORT</h3>
+                    <ul class="space-y-1">
+                        <li><a href="#" class="hover:text-white transition">Accessibility</a></li>
+                        <li><a href="#" class="hover:text-white transition">Shipping</a></li>
+                        <li><a href="#" class="hover:text-white transition">Support</a></li>
+                        <li><a href="#" class="hover:text-white transition">Contact Us</a></li>
+                    </ul>
+                </div>
+
+                <div class="space-y-2">
+                    <h3 class="font-bold text-white uppercase tracking-wider">FAQs</h3>
+                    <ul class="space-y-1">
+                        <li><a href="#" class="hover:text-white transition">FAQs</a></li>
+                        <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
+                    </ul>
+                </div>
+
+                <div class="flex flex-col justify-between items-start md:items-end space-y-4">
+                    <div class="flex space-x-3 text-base text-gray-400">
+                        <a href="#" class="hover:text-white transition"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="#" class="hover:text-white transition"><i class="fa-brands fa-twitter"></i></a>
+                        <a href="#" class="hover:text-white transition"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="hover:text-white transition"><i class="fa-brands fa-youtube"></i></a>
+                    </div>
+                    <p class="text-[10px] text-gray-500">© Copyright 2026. Lch. All rights reserved.</p>
+                </div>
+
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Nhúng app.js (BẮT BUỘC SAU KHI ĐÃ NHÚNG VUE.JS CDN) -->
+    <script src="../js/app.js"></script>
+</body>
+</html>

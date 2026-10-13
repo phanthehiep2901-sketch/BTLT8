@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Máy tính đơn giản</title>
+    <style>
+        body { margin: 30px; font-family: sans-serif; }
+        input[type="text"] { width: 60px; padding: 4px; text-align: center; }
+        input[type="button"] { width: 30px; padding: 4px; margin: 0 2px; cursor: pointer; }
+    </style>
+    <!-- Nhúng thư viện jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="script8.js"></script>
+</head>
+<body>
+
+    <input type="text" id="num1" value="12">
+    
+    <input type="button" class="btn-op" value="+">
+    <input type="button" class="btn-op" value="-">
+    <input type="button" class="btn-op" value="x">
+    <input type="button" class="btn-op" value="/">
+    <input type="button" class="btn-op" value="^">
+
+    <input type="text" id="num2" value="14">
+    =
+    <input type="text" id="result" readonly>
+
+</body>
+</html>

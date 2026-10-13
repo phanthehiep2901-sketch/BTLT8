@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Câu 12 - Radio Passport & Credit Card</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h2>Câu 12: Xử lý Passport & Credit Card</h2>
+        
+        <!-- Passport Section -->
+        <div class="form-group">
+            <label>Bạn có Passport không?</label><br>
+            <input type="radio" name="passport" value="Yes"> Yes
+            <input type="radio" name="passport" value="No" checked> No
+            <div id="passportBox" class="hidden-box">
+                <label for="passportInput">Thông tin Passport:</label>
+                <input type="text" id="passportInput" placeholder="Nhập số Passport...">
+            </div>
+        </div>
+
+        <!-- Credit Card Section -->
+        <div class="form-group">
+            <label>Bạn có Credit Card không?</label><br>
+            <input type="radio" name="credit" value="Yes"> Yes
+            <input type="radio" name="credit" value="No" checked> No
+            <div id="creditBox" class="hidden-box">
+                <label for="creditInput">Thông tin Thẻ Credit Card:</label>
+                <input type="text" id="creditInput" placeholder="Nhập số thẻ Credit Card...">
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

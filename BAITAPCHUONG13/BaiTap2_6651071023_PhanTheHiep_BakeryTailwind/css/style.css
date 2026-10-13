@@ -1,0 +1,4 @@
+/* Custom CSS bổ sung ngoài các Utility Class của Tailwind (nếu cần) */
+html {
+    scroll-behavior: smooth;
+}
